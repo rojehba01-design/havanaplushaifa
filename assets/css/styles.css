@@ -1,0 +1,914 @@
+/* ============================================================
+   Havana Plus — site styles
+   Colours come from the logo: palm green, bark brown, sun yellow,
+   on the logo's white by day and deep night-green for the bar.
+   ============================================================ */
+
+:root {
+  --paper: #F6F1E4;
+  --ground: #FFFFFF; /* the logo's white: page, bars and cards */
+  --paper-2: #ECE2CB;
+  --card: #FFFFFF;
+  --ink: #1D2A1B;
+  --ink-2: #53604F;
+  --palm: #2F5B2B;
+  --leaf: #7BA23A;
+  --leaf-2: #B3D17A;
+  --bark: #6A4323;
+  --sun: #F2D64B;
+  --logo-green: #78B03C; /* the palms and ring of the logo; the text accent that used to be yellow */
+  --logo-yellow: #FAE95E; /* the sun behind the palms in the logo */
+  /* the header's Reserve gold, now the About card's accent too */
+  --gold: #867050;
+  --gold-l: #AE9364;
+  --gold-h: #9A825D;
+  --gold-d: #8A6C3C;
+  --night: #122019;
+  --night-2: #1C3024;
+  --line: rgba(29, 42, 27, .14);
+  --line-dark: rgba(246, 241, 228, .16);
+
+  /* headings: EB Garamond, the free stand-in for Four Seasons' Monotype Garamond */
+  --f-display: 'EB Garamond', Garamond, Georgia, serif;
+  --f-body: 'Rubik', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --shell: 1200px;
+  --head-h: 72px;
+  --r: 20px;
+}
+/* Garamond has no Hebrew or Arabic: the closest classic serifs stand in */
+html[lang="he"] { --f-display: 'Frank Ruhl Libre', 'EB Garamond', Georgia, serif; }
+html[lang="ar"] { --f-display: 'Amiri', 'EB Garamond', serif; --f-body: 'Cairo', system-ui, sans-serif; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  overflow-x: clip; /* the full-width map reaches 100vw, scrollbar included */
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+/* height:auto so the width/height attributes (kept for layout stability)
+   never force a photo to its original pixel height */
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+h1, h2, h3, h4 { margin: 0; font-weight: 400; }
+p { margin: 0; }
+
+.shell { width: min(var(--shell), 100% - 40px); margin-inline: auto; }
+
+/* hidden with clip-path, not an offset: a negative offset stretches the
+   scroll canvas in RTL and parks the page in empty space */
+.skip {
+  position: absolute; top: 8px; inset-inline-start: 8px; z-index: 100;
+  background: var(--sun); color: var(--night); padding: .6em 1em; border-radius: 10px;
+  clip-path: inset(50%);
+}
+.skip:focus { clip-path: none; }
+
+.ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+
+/* ── buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55em;
+  padding: .85em 1.45em; border-radius: 999px;
+  font: 600 1rem/1 var(--f-body); text-decoration: none; white-space: nowrap;
+  border: 1.5px solid transparent; cursor: pointer;
+  transition: transform .18s ease, background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+.btn svg { width: 1.15em; height: 1.15em; flex: none; }
+.btn-sun { background: var(--sun); color: var(--night); }
+.btn-sun:hover { background: #F7E27A; }
+.btn-palm { background: var(--palm); color: var(--paper); }
+.btn-palm:hover { background: #3A6E35; }
+.btn-ghost { border-color: var(--line-dark); color: var(--paper); }
+.btn-ghost:hover { border-color: var(--leaf-2); color: var(--leaf-2); }
+.btn-line { border-color: var(--ink); color: var(--ink); }
+.btn-line:hover { background: var(--ink); color: var(--paper); }
+
+/* header, as on The Peninsula's pages: see-through with white type over the
+   dark hero, solid white once the page scrolls (site-head.js). Futura is
+   licensed, so the header type is Jost, its free look-alike. */
+.site-head {
+  position: fixed; inset: 0 0 auto; z-index: 40;
+  color: #FFFFFF; background-color: transparent;
+  transition: background-color .3s ease, color .3s ease, box-shadow .3s ease;
+}
+/* a soft shade under the see-through bar keeps the white type readable on any frame */
+.site-head::before {
+  content: ''; position: absolute; inset: 0 0 -48px; z-index: -1; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(10, 18, 14, .55), rgba(10, 18, 14, 0));
+  transition: opacity .3s ease;
+}
+.site-head.is-solid { background-color: rgba(255, 255, 255, .97); color: var(--ink); box-shadow: 0 1px 0 var(--line), 0 10px 30px rgba(18, 32, 25, .08); }
+.site-head.is-solid::before { opacity: 0; }
+.head-inner {
+  position: relative; height: 88px; padding-inline: clamp(16px, 3vw, 40px);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  transition: height .3s ease;
+}
+.site-head.is-solid .head-inner { height: var(--head-h); }
+.head-menu, .head-link, .lang > summary, .head-reserve {
+  font-family: 'Jost', var(--f-body); font-size: .82rem; font-weight: 400;
+  letter-spacing: .11em; text-transform: uppercase; line-height: 1;
+}
+html[lang="he"] :is(.head-menu, .head-link, .lang > summary, .head-reserve) { font-size: .95rem; letter-spacing: .02em; }
+html[lang="ar"] :is(.head-menu, .head-link, .lang > summary, .head-reserve) { font-size: .95rem; letter-spacing: 0; }
+.head-menu { display: inline-flex; align-items: center; gap: 14px; padding: 10px 0; background: none; border: 0; color: inherit; cursor: pointer; font-size: .95rem; text-decoration: none; }
+.head-burger, .head-burger::before, .head-burger::after { display: block; width: 22px; height: 1.5px; background: currentColor; border-radius: 1px; }
+.head-burger { position: relative; }
+.head-burger::before, .head-burger::after { content: ''; position: absolute; inset-inline-start: 0; }
+.head-burger::before { top: -7px; }
+.head-burger::after { top: 7px; width: 14px; }
+.head-logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); line-height: 0; border-radius: 50%; }
+/* the logo's disc is see-through, so it gets its own white ground to read on the dark hero */
+.head-logo img { width: 64px; height: 64px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 6px 18px rgba(0, 0, 0, .28); transition: width .3s ease, height .3s ease, box-shadow .3s ease; }
+.site-head.is-solid .head-logo img { box-shadow: none; }
+.site-head.is-solid .head-logo img { width: 52px; height: 52px; }
+.head-end { display: flex; align-items: center; }
+.head-link { position: relative; padding: 12px 20px; color: inherit; text-decoration: none; }
+.head-link::after { content: ''; position: absolute; inset-inline-end: 0; top: 50%; width: 1px; height: 18px; margin-top: -9px; background: currentColor; opacity: .45; }
+.head-link:hover, .lang > summary:hover { opacity: .72; }
+.head-reserve {
+  display: inline-flex; align-items: center; height: 40px; padding: 0 22px; margin-inline-start: 10px;
+  background: #867050; border: 1px solid #AE9364; color: #FFFFFF; text-decoration: none;
+  transition: background-color .2s ease;
+}
+.head-reserve:hover { background: #9A825D; }
+.head-menu:focus-visible, .head-link:focus-visible, .head-reserve:focus-visible, .head-logo:focus-visible, .lang > summary:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
+/* language: the globe and the current language open the four languages.
+   <details> opens and closes with no script at all; lang-menu.js adds
+   outside-tap, Escape and arrow keys. */
+.lang { position: relative; }
+.lang > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 12px 20px; color: inherit; }
+.lang > summary::-webkit-details-marker { display: none; }
+.lang > summary svg { width: 18px; height: 18px; flex: none; }
+.lang-menu {
+  position: absolute; top: calc(100% + 10px); inset-inline-end: 0; z-index: 60;
+  min-width: 180px; margin: 0; padding: 6px; list-style: none;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(18, 32, 25, .18);
+}
+.lang-menu a {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 10px 12px; border-radius: 10px;
+  text-decoration: none; font-weight: 500; color: var(--ink);
+}
+.lang-menu a:hover, .lang-menu a:focus-visible { background: var(--paper-2); outline: none; }
+.lang-menu a[aria-current="true"] { color: var(--palm); font-weight: 700; }
+.lang-menu a[aria-current="true"]::after { content: '\2713'; }
+
+/* MENU opens the categories (site-head.js): a panel slides in from the
+   button's side over a dark shade; each category jumps into the menu page */
+.cat-shade { position: fixed; inset: 0; z-index: 70; background: rgba(10, 18, 14, .5); opacity: 0; transition: opacity .25s ease; }
+.cat-panel {
+  position: fixed; top: 0; bottom: 0; inset-inline-start: 0; z-index: 71;
+  width: min(360px, 86vw); display: flex; flex-direction: column;
+  background: var(--card); color: var(--ink); box-shadow: 0 0 40px rgba(18, 32, 25, .25);
+  transform: translateX(100%); transition: transform .25s ease;
+}
+html[dir="ltr"] .cat-panel { transform: translateX(-100%); }
+html.cat-open .cat-shade { opacity: 1; }
+html.cat-open .cat-panel { transform: none; }
+html.cat-open { overflow: hidden; }
+.cat-panel-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+.cat-panel-title { margin: 0; font-family: var(--f-display); font-size: 1.5rem; font-weight: 700; color: var(--palm); }
+.cat-panel-close { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--paper-2); color: var(--ink); font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.cat-panel-list { flex: 1; overflow-y: auto; margin: 0; padding: 10px 12px; list-style: none; }
+.cat-panel-list a { display: block; padding: 13px 14px; border-radius: 10px; color: var(--ink); text-decoration: none; font-weight: 500; font-size: 1.05rem; }
+.cat-panel-list a:hover, .cat-panel-list a:focus-visible { background: var(--paper-2); color: var(--palm); outline: none; }
+.cat-panel-all { display: block; margin: 12px 24px 24px; padding: 14px; text-align: center; background: var(--palm); color: #FFFFFF; font-weight: 600; text-decoration: none; border-radius: 999px; }
+.cat-panel-all:hover { background: var(--logo-green); }
+.cat-panel-close:focus-visible, .cat-panel-all:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) { .site-head, .head-inner, .head-logo img, .cat-shade, .cat-panel { transition: none; } }
+
+@media (max-width: 900px) {
+  .head-inner, .site-head.is-solid .head-inner { height: var(--head-h); }
+  .head-link, .head-menu-label, .lang-label { display: none; }
+  .lang > summary { padding: 12px 10px; }
+  .lang > summary svg { width: 20px; height: 20px; }
+  .head-reserve { height: 36px; padding: 0 12px; margin-inline-start: 2px; font-size: .72rem; letter-spacing: .08em; }
+  html:is([lang="he"], [lang="ar"]) .head-reserve { font-size: .82rem; }
+  /* on a phone the globe rides beside the menu icon, not across the bar */
+  .head-end { display: contents; }
+  .head-menu { order: 1; }
+  .lang { order: 2; margin-inline-end: auto; }
+  .head-reserve { order: 3; }
+  /* the panel drops from the globe inwards, so it stays on screen at the edge */
+  .lang-menu { inset-inline-end: auto; inset-inline-start: 0; }
+  .head-logo img, .site-head.is-solid .head-logo img { width: 50px; height: 50px; }
+}
+/* ── hero ────────────────────────────────────────────────── */
+.hero {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(60% 70% at 78% 30%, rgba(242, 214, 75, .16), transparent 60%),
+    radial-gradient(50% 60% at 10% 100%, rgba(123, 162, 58, .18), transparent 70%),
+    var(--night);
+  color: var(--paper);
+  padding-block: 72px 0;
+}
+html[dir="rtl"] .hero {
+  background:
+    radial-gradient(60% 70% at 22% 30%, rgba(242, 214, 75, .16), transparent 60%),
+    radial-gradient(50% 60% at 90% 100%, rgba(123, 162, 58, .18), transparent 70%),
+    var(--night);
+}
+.hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+.kicker {
+  display: inline-flex; align-items: center; gap: 10px;
+  color: var(--leaf-2); font-weight: 600; font-size: .95rem; letter-spacing: .04em;
+}
+.kicker::before { content: ''; width: 28px; height: 2px; background: currentColor; }
+.hero-title {
+  font-family: var(--f-display);
+  font-size: clamp(2.6rem, 6.2vw, 5.2rem);
+  line-height: 1.04; margin: 18px 0 20px;
+}
+html[lang="ar"] .hero-title { line-height: 1.25; }
+.hero-title em { font-style: normal; color: var(--logo-green); }
+.hero-lede { font-size: 1.15rem; color: rgba(246, 241, 228, .82); max-width: 36ch; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+/* the hero keeps only its line, buttons and details over the film */
+.hero .kicker + .hero-actions { margin-top: 22px; }
+
+.hero-info {
+  margin-top: 64px; border-top: 1px solid var(--line-dark);
+  display: grid; grid-template-columns: repeat(3, 1fr);
+}
+.hero-info > div { padding: 22px 0; display: flex; flex-direction: column; gap: 2px; }
+.hero-info > div + div { border-inline-start: 1px solid var(--line-dark); padding-inline-start: 28px; }
+.hero-info dt { font-size: .85rem; color: var(--leaf-2); font-weight: 600; }
+.hero-info dd { margin: 0; font-size: 1.05rem; }
+.hero-info a { text-decoration: none; }
+.hero-info a:hover { color: var(--logo-green); }
+/* hero accents: the logo's sun-yellow words and labels; the menu button wears the header's gold Reserve colours */
+.hero .kicker, .hero .hero-title em, .hero .hero-info dt { color: var(--logo-yellow); }
+.hero .btn-sun { background: #867050; border-color: #AE9364; color: #FFFFFF; }
+.hero .btn-sun:hover { background: #9A825D; }
+
+@media (max-width: 900px) {
+  .hero { padding-top: 40px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 24px; }
+  .hero-info { grid-template-columns: 1fr; margin-top: 40px; }
+  .hero-info > div { padding: 14px 0; }
+  .hero-info > div + div { border-inline-start: 0; padding-inline-start: 0; border-top: 1px solid var(--line-dark); }
+}
+
+/* ── hero video ──────────────────────────────────────────────
+   Havana's own night film (their Facebook, Jan 2022): full-bleed,
+   silent, looping, under a green shade that keeps the words readable.
+   isolation + z-index -1 keep it behind the text without positioning
+   the text blocks. */
+.hero {
+  isolation: isolate;
+  min-height: min(90vh, 860px);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding-block: 120px 128px;
+}
+.hero-grid { grid-template-columns: minmax(0, 700px); }
+.hero .kicker, .hero-title, .hero-lede { text-shadow: 0 2px 18px rgba(0, 0, 0, .45); }
+.hero-media {
+  position: absolute; inset: 0; z-index: -1;
+  background: var(--night) url('../img/hero-poster.jpg') center / cover no-repeat;
+}
+.hero-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-media::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, rgba(18, 32, 25, .97) 0%, rgba(18, 32, 25, .6) 38%, rgba(18, 32, 25, .15) 72%, rgba(18, 32, 25, .45) 100%),
+    linear-gradient(to right, rgba(18, 32, 25, .8) 0%, rgba(18, 32, 25, 0) 62%);
+}
+html[dir="rtl"] .hero-media::after {
+  background:
+    linear-gradient(to top, rgba(18, 32, 25, .97) 0%, rgba(18, 32, 25, .6) 38%, rgba(18, 32, 25, .15) 72%, rgba(18, 32, 25, .45) 100%),
+    linear-gradient(to left, rgba(18, 32, 25, .8) 0%, rgba(18, 32, 25, 0) 62%);
+}
+@media (max-width: 900px) {
+  .hero { min-height: 84vh; padding-top: 96px; }
+  .hero-grid { grid-template-columns: 1fr; }
+}
+
+/* ── sections ────────────────────────────────────────────── */
+.section { padding-block: 96px; }
+.section-head { max-width: 680px; margin-bottom: 44px; }
+.eyebrow { color: var(--palm); font-weight: 600; font-size: .92rem; letter-spacing: .04em; display: inline-flex; align-items: center; gap: 10px; }
+.eyebrow::before { content: ''; width: 22px; height: 2px; background: var(--leaf); }
+.section-title { font-family: var(--f-display); font-size: clamp(2rem, 4.2vw, 3.3rem); line-height: 1.12; margin: 12px 0 14px; }
+html[lang="ar"] .section-title { line-height: 1.35; }
+.section-lede { color: var(--ink-2); font-size: 1.1rem; }
+@media (max-width: 700px) { .section { padding-block: 64px; } }
+
+/* about — a cream card lifted over the film, the photo set lower beside it
+   (the shape of alareesha.co.il's About Us) */
+.about { position: relative; padding-block: 0 96px; margin-top: -120px; }
+.about-grid {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 0;
+}
+.about-card {
+  position: relative; z-index: 2;
+  background: var(--ground);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 0 30px 60px -32px rgba(18, 32, 25, .45);
+  padding: clamp(26px, 3.6vw, 56px);
+  /* the card reaches over the photo, as the story card does on alareesha.co.il */
+  margin-inline-end: -64px;
+}
+/* inside the card the eyebrow is the header's gold, without its green rule */
+.about-card .eyebrow { color: var(--gold-d); }
+.about-card .eyebrow::before { content: none; }
+.split {
+  font-family: var(--f-display); font-weight: 400;
+  font-size: clamp(2.2rem, 4.8vw, 3.6rem); line-height: 1.1; letter-spacing: -.01em;
+  margin: 14px 0 22px;
+}
+.split b { font-weight: 700; }
+.split span { color: var(--ink-2); }
+.about-card p { color: var(--ink-2); font-size: 1.06rem; }
+.about-card p + p { margin-top: 14px; }
+.about-card .about-lede {
+  font-family: var(--f-display); color: var(--ink);
+  font-size: clamp(1.2rem, 2vw, 1.55rem); line-height: 1.45;
+}
+.about-card .about-note {
+  border-top: 1px solid var(--line); padding-top: 16px; margin-top: 22px;
+  font-size: .92rem;
+}
+.about-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.btn-gold { background: var(--gold); border-color: var(--gold-l); color: #FFFFFF; }
+.btn-gold:hover { background: var(--gold-h); }
+.btn-gold-o { border-color: var(--gold-l); color: var(--gold-d); }
+.btn-gold-o:hover { background: var(--gold); border-color: var(--gold); color: #FFFFFF; }
+.about-photo { position: relative; z-index: 1; margin: 120px 0 0; }
+.about-photo img {
+  display: block; width: 100%; height: clamp(340px, 40vw, 560px);
+  object-fit: cover; object-position: center 62%; border-radius: 4px;
+}
+@media (max-width: 900px) {
+  .about { margin-top: -56px; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-card { margin-inline-end: 0; }
+  .about-photo { margin-top: 0; }
+  .about-photo img { height: clamp(260px, 52vw, 380px); }
+}
+/* phones (owner, 2026-09-28): photo first, full width, with the eyebrow and
+   "About Us" set on its dark lower edge; then the one-line lede and the short
+   sentence, the longer paragraph and the note behind "read more" (about.js) */
+@media (max-width: 760px) {
+  .about { margin-top: 0; padding-top: 0; }
+  .about-grid { --about-photo: 320px; }
+  .about-photo { order: -1; margin: 0 calc(50% - 50vw); }
+  .about-photo img { height: var(--about-photo); border-radius: 0; object-position: center 58%; }
+  .about-photo::after {
+    content: ""; position: absolute; inset: 40% 0 0; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(18, 32, 25, 0), rgba(18, 32, 25, .82));
+  }
+  /* the join with the hero: the hero ends in the night green, so the photo
+     rises out of that same green instead of starting at a hard edge, and the
+     hero drops the bottom room it kept for the old overlapping card */
+  .hero { padding-bottom: 36px; }
+  .about-photo::before {
+    content: ""; position: absolute; inset: 0 0 45%; z-index: 1; pointer-events: none;
+    background: linear-gradient(to bottom, rgb(18, 32, 25) 0%, rgba(18, 32, 25, .75) 30%, rgba(18, 32, 25, 0) 100%);
+  }
+  /* the card gives up its box; its eyebrow and title move onto the photo
+     (placed against .about-grid, which is the positioned box) */
+  .about-card { position: static; background: transparent; border: 0; box-shadow: none; padding: 20px 0 0; }
+  .about-card .eyebrow, .about-card .split { position: absolute; z-index: 3; margin: 0; }
+  .about-card .eyebrow { top: calc(var(--about-photo) - 114px); color: #F2D64B; font-size: .8rem; line-height: 1.3; } /* room for two lines (English wraps) */
+  .about-card .split { top: calc(var(--about-photo) - 66px); color: #FFFFFF; font-size: 2.6rem; }
+  .about-card .split span { color: var(--gold-l); } /* the brown of the "הזמנת שולחן" button, in its lighter edge tone so it reads on the dark photo */
+  html[dir="rtl"] .about-card :is(.eyebrow, .split) { right: 0; }
+  html[dir="ltr"] .about-card :is(.eyebrow, .split) { left: 0; }
+  .about-card > p:nth-of-type(3) { margin-top: 10px; }
+  .about-card:not(.is-open) > p:nth-of-type(4),
+  .about-card:not(.is-open) > .about-note { display: none; }
+  .about-more {
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 6px 0;
+    background: none; border: 0; color: var(--palm); font: 600 1rem var(--f-body); cursor: pointer;
+  }
+  .about-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 18px; }
+  .about-actions .btn { justify-content: center; min-width: 0; padding-inline: 10px; }
+}
+.about-more { display: none; }
+@media (max-width: 760px) { .about-more { display: inline-flex; } }
+
+/* signature dishes: one cut-out dish in the middle, its neighbours peeking in */
+.sig-head { margin-inline: auto; text-align: center; }
+.sig-carousel { --slide: min(60vw, 840px); --gap: clamp(14px, 3vw, 40px); position: relative; }
+.sig-track {
+  list-style: none; margin: 0; display: flex; gap: var(--gap);
+  padding: 0 calc((100% - var(--slide)) / 2);
+  overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+}
+.sig-track::-webkit-scrollbar { display: none; }
+.sig-slide { flex: 0 0 var(--slide); scroll-snap-align: center; }
+.sig-slide a { display: block; color: inherit; text-decoration: none; }
+.sig-slide img {
+  display: block; width: 100%; height: auto; aspect-ratio: 14 / 10; object-fit: contain;
+  filter: drop-shadow(0 26px 30px rgba(29, 42, 27, .2));
+  opacity: .6; transform: scale(.8); transition: opacity .45s ease, transform .45s ease;
+}
+.sig-slide.is-active img { opacity: 1; transform: none; }
+.sig-cap { text-align: center; padding-top: 14px; opacity: 0; transition: opacity .35s ease; }
+.sig-slide.is-active .sig-cap { opacity: 1; }
+.dish-name { font-family: var(--f-body); font-weight: 700; font-size: 1rem; line-height: 1.3; letter-spacing: .24em; text-transform: uppercase; color: var(--ink); }
+html[lang="he"] .dish-name { font-size: 1.2rem; letter-spacing: .06em; }
+html[lang="ar"] .dish-name { font-size: 1.2rem; letter-spacing: 0; }
+.sig-meta { margin-top: 8px; display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; color: var(--ink-2); font-size: .95rem; }
+.dish-cat::after { content: '·'; margin-inline: 12px; opacity: .6; }
+.dish-price { font-weight: 700; color: var(--palm); white-space: nowrap; }
+.cur { font-size: .82em; margin-inline-start: 1px; }
+.sig-arrow {
+  position: absolute; top: calc(var(--slide) * .357); transform: translateY(-50%);
+  width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 10px 24px rgba(29, 42, 27, .12); transition: opacity .2s ease, background .2s ease;
+}
+.sig-prev { inset-inline-start: calc(50% - var(--slide) / 2 - 26px); }
+.sig-next { inset-inline-end: calc(50% - var(--slide) / 2 - 26px); }
+.sig-arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+html[dir="rtl"] .sig-arrow svg { transform: scaleX(-1); }
+.sig-arrow:hover { background: var(--sun); }
+.sig-arrow:disabled { opacity: 0; pointer-events: none; }
+.sig-arrow:focus-visible { outline: 3px solid var(--leaf); outline-offset: 3px; }
+@media (max-width: 700px) {
+  .sig-carousel { --slide: 72vw; --gap: 8px; }
+  .sig-arrow { width: 42px; height: 42px; }
+  .sig-prev { inset-inline-start: 6px; }
+  .sig-next { inset-inline-end: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .sig-slide img, .sig-cap { transition: none; } }
+
+/* menu sections */
+.menu-band { background: var(--paper-2); }
+.menu-band-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: start; }
+.pills { display: flex; flex-wrap: wrap; gap: 10px; }
+.pill {
+  padding: .7em 1.2em; border-radius: 999px; background: var(--card); border: 1px solid var(--line);
+  text-decoration: none; font-weight: 500; transition: background-color .18s ease, color .18s ease;
+}
+.pill:hover { background: var(--palm); color: var(--paper); border-color: var(--palm); }
+.langs-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+@media (max-width: 900px) { .menu-band-grid { grid-template-columns: 1fr; gap: 28px; } }
+
+/* nights */
+.nights {
+  background: var(--palm); color: var(--paper); border-radius: 32px; overflow: hidden;
+  display: grid; grid-template-columns: 1.1fr 1fr;
+}
+.nights-copy { padding: 56px; display: flex; flex-direction: column; justify-content: center; }
+.nights .eyebrow { color: var(--logo-green); }
+.nights .eyebrow::before { background: var(--logo-green); }
+.nights-copy p { color: rgba(246, 241, 228, .85); font-size: 1.08rem; }
+.nights-copy .hero-actions { margin-top: 28px; }
+.nights-photos { display: grid; grid-template-columns: 1fr 1fr; min-height: 380px; }
+.nights-photos img { width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 900px) {
+  .nights { grid-template-columns: 1fr; }
+  .nights-copy { padding: 36px 26px; }
+  .nights-photos { min-height: 260px; }
+}
+
+/* follow us, as on flaban.com: a centred title, the owner's Instagram posts rolling slowly past as
+   rounded tiles, each photo whole at its own shape (each opens its post), round buttons.
+   The list is written three times and the roll shifts by a third: a copy is always
+   coming in behind the one leaving, however wide the screen. */
+/* no gap between the Instagram / Facebook buttons and "הגעה" on any screen
+   (owner, 2026-09-28) — the street sign no longer rises above #visit */
+.section.social { margin-bottom: 0; padding-bottom: 24px; }
+.social-title { text-align: center; margin: 0 0 36px; }
+/* the strip is laid and rolled left-to-right in every language: on an RTL
+   page the track would otherwise hang off the right edge and roll away
+   into empty space */
+.social-marquee { overflow: hidden; padding-block: 10px 26px; direction: ltr; }
+/* the eight photos are written three times over, so one keyframe can roll
+   the track by exactly one copy and land where it started */
+.social-track { list-style: none; margin: 0; padding: 0; display: flex; width: max-content; direction: ltr; animation: social-roll 80s linear infinite; }
+.social-track li { flex: none; margin-right: 22px; }
+.social-track a { display: block; border-radius: 22px; overflow: hidden; box-shadow: 0 14px 30px rgba(18, 32, 25, .16); }
+.social-track img { display: block; height: clamp(220px, 23vw, 340px); width: auto; max-width: none; transition: transform .5s ease; }
+.social-track a:hover img { transform: scale(1.04); }
+.social-track a:focus-visible { outline: 3px solid var(--sun); outline-offset: -3px; }
+/* exactly one of the three copies, so the seam never drifts */
+@keyframes social-roll { to { transform: translateX(calc(-100% / 3)); } }
+.social-links { display: flex; justify-content: center; gap: 14px; margin-top: 18px; }
+.social-btn { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--palm); color: #FFFFFF; transition: transform .2s ease, background-color .2s ease; }
+.social-btn:hover { transform: translateY(-2px); background: var(--logo-green); }
+.social-btn svg { width: 24px; height: 24px; }
+.social-btn:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+@media (max-width: 700px) { .social-track li { margin-right: 12px; } .social-track img { height: 62vw; } }
+@media (prefers-reduced-motion: reduce) { .social-track { animation: none; } .social-marquee { overflow-x: auto; } }
+/* visit */
+.visit-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; align-items: stretch; }
+.visit-card { background: var(--card); border: 1px solid var(--line); border-radius: 28px; padding: 36px; }
+.visit-rows { margin: 28px 0 0; }
+.visit-rows div { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); }
+.visit-rows dt { color: var(--ink-2); font-weight: 500; }
+.visit-rows dd { margin: 0; font-weight: 500; }
+.visit-rows a { text-decoration: none; }
+.visit-rows a:hover { color: var(--palm); text-decoration: underline; }
+.visit-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+/* the map is drawn, as on quintonil.com: the real streets around the restaurant
+   (OpenStreetMap) as dashed lines with their names along them, the logo as the pin */
+.visit-map { position: relative; min-height: 380px; background: transparent; } /* no fill: the page shows behind the streets */
+.visit-map-link { display: block; height: 100%; color: inherit; text-decoration: none; }
+.visit-map svg { display: block; width: 100%; height: 100%; min-height: 380px; }
+.map-street { fill: none; stroke: var(--logo-green); stroke-width: 1.5; stroke-dasharray: 7 6; stroke-linecap: round; vector-effect: non-scaling-stroke; } /* same width on screen at any zoom (visit-map.js) */
+.map-street.is-main { stroke-width: 2.2; }
+/* a white halo under each name keeps it readable where it crosses a dashed line */
+.map-label { font-family: var(--f-display); font-size: 17px; fill: #603515; letter-spacing: .02em; paint-order: stroke; stroke: #FFFFFF; stroke-width: 6px; stroke-linejoin: round; }
+/* Amiri runs small beside the Latin and Hebrew serifs */
+html[lang="ar"] .map-label { letter-spacing: 0; font-size: 20px; }
+.map-pin-ring { fill: #FFFFFF; stroke: var(--logo-green); stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+/* OpenStreetMap's licence asks for this credit; it sits opposite the Google Maps link in both directions */
+.map-credit { position: absolute; inset-block-end: 10px; inset-inline-start: 10px; font-size: .72rem; color: var(--ink-2); }
+.map-open {
+  position: absolute; inset-block-end: 6px; inset-inline-end: 8px;
+  font-family: var(--f-display); font-size: 1.1rem; color: #603515;
+  text-decoration: underline; text-underline-offset: 4px;
+}
+.visit-map-link:hover .map-open { color: var(--logo-green); }
+.fine { margin-top: 18px; font-size: .88rem; color: var(--ink-2); }
+@media (max-width: 900px) {
+  .visit-grid { grid-template-columns: 1fr; }
+}
+
+/* "הגעה" in the manner of the Alareesha site (owner, 2026-09-28): no card box,
+   the details laid straight on the page — small green heading over each one,
+   the hours set large in the display face — a square-cornered map, and flat
+   brand-coloured buttons (Waze cyan, WhatsApp green) */
+.visit-card { background: transparent; border: 0; border-radius: 0; padding: 8px 0 0; }
+.visit-rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 22px 28px; border-top: 1px solid var(--line); padding-top: 24px; }
+.visit-rows div { display: block; padding: 0; border: 0; }
+.visit-rows dt { font-family: var(--f-display); font-weight: 700; font-size: 1.05rem; color: var(--palm); margin-bottom: 6px; }
+.visit-rows dd { font-size: 1.05rem; }
+.visit-rows div:nth-child(2) dd { font-family: var(--f-display); font-weight: 900; font-size: 1.5rem; line-height: 1.2; }
+.visit-actions .btn { border-radius: 2px; }
+.visit-actions a[href*="waze.com"] { background: #33CCFF; border-color: #33CCFF; color: #FFFFFF; }
+.visit-actions a[href*="waze.com"]:hover { background: #1FA9DB; border-color: #1FA9DB; }
+.visit-actions a[href*="wa.me"] { background: #25D366; border-color: #25D366; color: #FFFFFF; }
+.visit-actions a[href*="wa.me"]:hover { background: #1DA851; border-color: #1DA851; }
+.visit-map { border-radius: 0; }
+/* "open now / closed" badge — visit-map.js writes it; shown on phones only */
+.visit-open {
+  display: none; align-items: center; gap: 10px; margin: 0;
+  padding: 12px 16px; border-radius: 14px; font-weight: 600;
+  background: #EAF3DE; color: #27500A;
+}
+.visit-open::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #639922; flex: none; }
+.visit-open .visit-open-until { margin-inline-start: auto; font-weight: 500; color: #3B6D11; }
+.visit-open.is-closed { background: #FCEBEB; color: #791F1F; }
+.visit-open.is-closed::before { background: #E24B4A; }
+.visit-open.is-closed .visit-open-until { color: #A32D2D; }
+.fine { border-top: 1px solid var(--line); padding-top: 14px; }
+
+/* the street sign — Havana's real pole on Ben Gurion (round logo disc on a
+   green post, "a different experience in haifa"), standing on the outer edge
+   of the location section and rising a little above it, the way a barber's
+   pole stands at a shop door. Drawn in CSS so it stays sharp at any size. */
+/* the map runs the full width of the screen, edge to edge, under the details
+   (as on the Alareesha site); it is drawn in vectors, so a shorter crop costs
+   no sharpness */
+.visit-grid { grid-template-columns: 1fr auto; grid-template-areas: "card pole" "map map"; }
+.visit-card { grid-area: card; }
+.visit-map { grid-area: map; margin-inline: calc(50% - 50vw); }
+.visit-map, .visit-map svg { min-height: 0; height: clamp(220px, 26vw, 360px); }
+/* the pole stands on the very bottom of the page, like the barber's pole:
+   its column sits beside the card and map, the disc reaches --rise above the
+   location section, and the post runs down through the footer. --drop is the
+   distance from this column to the page bottom — sign-pole.js measures it,
+   since it changes with the language and the screen width. z-index keeps it
+   in front of the dark footer. */
+.visit-pole {
+  --disc: 290px; --post: 64px; --rise: 0px;
+  grid-area: pole; position: relative; z-index: 2; align-self: stretch; width: var(--disc);
+}
+.sign-pole {
+  position: absolute; top: calc(-1 * var(--rise)); bottom: calc(-1 * var(--drop, 0px)); inset-inline-start: 0;
+  width: var(--disc);
+  display: flex; flex-direction: column; align-items: center;
+  filter: drop-shadow(0 28px 30px rgba(18, 32, 25, .3));
+}
+.sign-disc {
+  position: relative; z-index: 1;
+  width: var(--disc); aspect-ratio: 1; border-radius: 50%;
+  display: grid; place-items: center;
+  border: calc(var(--disc) * .04) solid #23904A;
+  background: radial-gradient(circle at 34% 28%, #FFFFFF 0%, #F6F3EA 55%, #DCD5C3 100%);
+  box-shadow: inset 0 -12px 20px rgba(0, 0, 0, .12), inset 0 10px 16px rgba(255, 255, 255, .85);
+}
+/* the green ring stays still; the logo inside turns round its upright axis
+   like the Earth, on every screen size. It is printed on both faces: the img
+   is the front, ::before the back (half a turn ahead, so it never reads
+   mirrored), and each hides while it faces away. */
+.sign-disc img { width: 90%; height: auto; backface-visibility: hidden; animation: sign-turn 10s linear infinite; }
+.sign-disc::before {
+  content: ""; position: absolute; inset: 5%;
+  background: url("../img/logo.png") center / contain no-repeat;
+  backface-visibility: hidden; animation: sign-turn-back 10s linear infinite;
+}
+@keyframes sign-turn { from { transform: perspective(900px) rotateY(0deg); } to { transform: perspective(900px) rotateY(360deg); } }
+@keyframes sign-turn-back { from { transform: perspective(900px) rotateY(180deg); } to { transform: perspective(900px) rotateY(540deg); } }
+@media (prefers-reduced-motion: reduce) { .sign-disc img, .sign-disc::before { animation: none; } }
+/* the post runs up behind the disc to its centre, the axle the disc turns
+   on, so the two read as one part even when the disc is side-on; a steel
+   collar (::before, drawn above the disc) clamps them where they meet */
+.sign-post {
+  position: relative;
+  flex: 1; width: var(--post); margin-top: calc(var(--disc) * -.5);
+  display: flex; align-items: center; justify-content: center;
+  border-inline: 2px solid rgba(255, 255, 255, .85);
+  background: linear-gradient(90deg, #11592B 0%, #23904A 34%, #58BD78 50%, #23904A 66%, #11592B 100%);
+}
+.sign-post::before {
+  content: ""; position: absolute; z-index: 2;
+  top: calc(var(--disc) * .44); left: 50%; transform: translateX(-50%);
+  width: calc(var(--post) * 1.35); height: calc(var(--post) * .42); border-radius: 6px;
+  background: linear-gradient(90deg, #5A625B 0%, #C9CFC9 50%, #5A625B 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .45), 0 3px 6px rgba(0, 0, 0, .25);
+}
+.sign-post span {
+  writing-mode: vertical-rl; direction: ltr; white-space: nowrap;
+  color: #FFFFFF; font: 600 calc(var(--post) * .28) / 1 'Rubik', system-ui, sans-serif; letter-spacing: .05em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+}
+/* steel foot plate: it stands on the dark footer, so it has to catch light */
+.sign-base {
+  width: calc(var(--post) * 1.9); height: calc(var(--post) * .5); border-radius: 8px 8px 4px 4px;
+  background: linear-gradient(90deg, #5A625B 0%, #C9CFC9 50%, #5A625B 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .45);
+}
+/* the footer text keeps clear of the post */
+.site-foot.has-pole .foot-inner { padding-inline-end: 330px; }
+@media (max-width: 1100px) {
+  .visit-pole { --disc: 240px; --post: 54px; --rise: 0px; }
+  .site-foot.has-pole .foot-inner { padding-inline-end: 280px; }
+}
+@media (max-width: 900px) {
+  /* phones (owner, 2026-09-28): under the Instagram / Facebook buttons, the
+     "הגעה" details — title, address, "open now" badge, a big Waze button,
+     WhatsApp and call side by side — then the map, running down to the dark
+     footer. The street sign stands on the footer's top edge and rises up the
+     map's outer side, its disc at the map's top. */
+  .visit-grid { grid-template-columns: minmax(0, 1fr) 80px; grid-template-areas: "card card" "map map"; gap: 24px 0; }
+  #visit { padding-bottom: 0; }   /* the map meets the footer */
+  .visit-map, .visit-map svg { height: 340px; }
+  .visit-map { position: relative; z-index: 1; overflow: hidden; }
+  /* no box of its own: the page shows behind the details (owner, 2026-09-28) */
+  .visit-card { position: relative; z-index: 3; padding: 0; background: transparent; border: 0; box-shadow: none; }
+  .visit-card .section-title { margin-bottom: 6px; }
+  .visit-rows { display: block; margin: 0 0 14px; padding: 0; border: 0; }
+  .visit-rows div:not(:first-child), .visit-rows dt { display: none; }
+  .visit-rows dd { font-size: 1rem; color: var(--ink-2); }
+  /* the map's labels sit on its right side, clear of the sign on the left */
+  .map-credit { inset-block-end: auto; top: 12px; }
+  .map-open { inset-inline-end: auto; inset-inline-start: 12px; inset-block-end: 12px; }
+  .visit-open { display: flex; }
+  .visit-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: 14px; }
+  .visit-actions .btn { justify-content: center; height: 48px; border-radius: 14px; min-width: 0; padding-inline: 10px; gap: 6px; }
+  .visit-actions a[href*="waze.com"] { grid-column: 1 / -1; height: 56px; font-size: 1.05rem; }
+  /* the sign shares the map's grid cell, on its outer (left) side: no rise,
+     so the disc starts at the map's top; sign-pole.js runs the post down to
+     the footer's top edge, where the map ends. The 80px column puts the
+     post's centre 60px from the screen edge, so the 120px disc just fits. */
+  .visit-pole { grid-area: map; justify-self: end; align-self: stretch; z-index: 2; --disc: 120px; --post: 28px; --rise: 0px; width: 80px; }
+  .sign-pole { inset-inline-start: auto; left: 50%; transform: translateX(-50%); filter: drop-shadow(0 14px 16px rgba(18, 32, 25, .3)); }
+  .sign-post span { font-size: 9px; letter-spacing: .04em; }
+  /* on phones the post stands on top of the footer, not through it */
+  .site-foot.has-pole .foot-inner { padding-inline-end: 0; }
+}
+
+/* ── footer ──────────────────────────────────────────────── */
+.site-foot { background: var(--night); color: rgba(246, 241, 228, .8); padding-block: 56px 40px; }
+.foot-inner { display: grid; grid-template-columns: auto 1fr auto; gap: 40px; align-items: center; }
+.foot-logo { width: 96px; height: 96px; }
+.foot-nav { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+.foot-nav a { text-decoration: none; }
+.foot-nav a:hover { color: var(--logo-green); }
+.foot-fine { font-size: .9rem; }
+@media (max-width: 800px) { .foot-inner { grid-template-columns: 1fr; gap: 22px; } }
+
+/* ── phone dock ──────────────────────────────────────────── */
+.dock { display: none; }
+@media (max-width: 760px) {
+  body:has(.dock) { padding-bottom: 86px; } /* the menu pages have no dock (owner, 2026-09-28) */
+  /* pages with the footer: the room for the dock goes inside the dark footer,
+     so the page ends dark green and the sign's post stands in it to the bottom */
+  body:has(.site-foot) { padding-bottom: 0; }
+  body:has(.dock) .site-foot { padding-bottom: calc(40px + 86px); }
+  .dock {
+    position: fixed; z-index: 50; bottom: 12px; inset-inline: 12px;
+    display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 6px; padding: 6px;
+    background: var(--night); border-radius: 999px; box-shadow: 0 14px 34px rgba(0, 0, 0, .35);
+  }
+  .dock a {
+    display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; border-radius: 999px;
+    color: var(--paper); text-decoration: none; font-weight: 600; font-size: .95rem;
+  }
+  .dock a:first-child { background: var(--sun); color: var(--night); }
+  .dock svg { width: 20px; height: 20px; }
+}
+
+/* ============================================================
+   Menu page
+   ============================================================ */
+.menu-hero {
+  background:
+    radial-gradient(50% 90% at 85% 0%, rgba(242, 214, 75, .14), transparent 60%),
+    var(--night);
+  color: var(--paper); padding-block: 140px 48px; /* room for the see-through fixed header */
+}
+html[dir="rtl"] .menu-hero { background: radial-gradient(50% 90% at 15% 0%, rgba(242, 214, 75, .14), transparent 60%), var(--night); }
+.menu-hero .shell { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+.menu-title { font-family: var(--f-display); font-size: clamp(2.6rem, 7vw, 4.6rem); line-height: 1.05; margin: 12px 0 10px; }
+.menu-sub { color: rgba(246, 241, 228, .8); font-size: 1.08rem; max-width: 46ch; }
+.menu-hero-logo { width: 132px; height: 132px; }
+@media (max-width: 700px) { .menu-hero { padding-top: 112px; } .menu-hero-logo { width: 84px; height: 84px; } .menu-hero .shell { align-items: start; } }
+
+.m-tools { display: flex; gap: 12px; align-items: center; padding-top: 28px; }
+.m-search {
+  flex: 1; max-width: 460px; position: relative;
+}
+.m-search input {
+  width: 100%; height: 50px; border-radius: 999px; border: 1.5px solid var(--line);
+  background: var(--card); padding-inline: 48px 18px; font: 500 1rem var(--f-body); color: var(--ink);
+}
+.m-search svg { position: absolute; top: 50%; inset-inline-start: 18px; width: 20px; height: 20px; transform: translateY(-50%); color: var(--ink-2); pointer-events: none; }
+.m-search input::placeholder { color: var(--ink-2); }
+
+.m-jump {
+  position: sticky; top: var(--head-h); z-index: 30;
+  display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  padding: 14px 0; margin-top: 16px;
+  background: rgba(255, 255, 255, .95);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.m-jump::-webkit-scrollbar { display: none; }
+.m-jump-link {
+  flex: none; padding: .5em 1em; border-radius: 999px; border: 1px solid var(--line);
+  text-decoration: none; font-weight: 500; font-size: .95rem; background: var(--card);
+  transition: background-color .18s ease, color .18s ease;
+}
+.m-jump-link:hover { border-color: var(--palm); }
+.m-jump-link.is-here { background: var(--palm); border-color: var(--palm); color: var(--paper); }
+
+.m-cat { padding-block: 52px 8px; scroll-margin-top: calc(var(--head-h) + 70px); }
+.m-cat-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; border-bottom: 2px solid var(--ink); padding-bottom: 14px; margin-bottom: 24px; }
+.m-cat-no { font-family: var(--f-display); color: var(--leaf); font-size: 1.2rem; }
+.m-cat-name { font-family: var(--f-display); font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1.15; }
+.m-cat-count { color: var(--ink-2); font-size: .92rem; margin-inline-start: auto; }
+.m-cat-lede { width: 100%; color: var(--ink-2); }
+
+.m-group-title { display: flex; align-items: center; gap: 14px; font-family: var(--f-display); font-size: 1.4rem; color: var(--palm); margin: 36px 0 16px; }
+.m-group-title::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+.m-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+.m-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+/* the dish photos are all 1200×675, so the box keeps their own 16:9 —
+   nothing of the plate is cropped away */
+.m-photo { position: relative; aspect-ratio: 16 / 9; background: var(--night-2); overflow: hidden; }
+.m-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.m-card.no-photo { border-top: 4px solid var(--leaf); }
+
+/* drinks shelf (menu.js, layout 'shelf'), after the flaban site's drinks:
+   product cards in a row that scrolls sideways and bleeds to the screen edge,
+   so the clipped last card says there is more. The whole bottle or can, on
+   white, never cropped; the price above the name. The side gutter is held by
+   flex spacers, not padding — a right-to-left scroller starts already past
+   its start padding, which put the first card flush against the edge. */
+.m-shelf {
+  --gutter: 20px;
+  list-style: none; margin: 0 calc(var(--gutter) * -1); padding: 4px 0 10px;
+  display: flex; gap: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.m-shelf::-webkit-scrollbar { display: none; }
+.m-shelf::before, .m-shelf::after { content: ''; flex: 0 0 calc(var(--gutter) - 12px); }
+.m-shelf-card {
+  flex: 0 0 176px; display: flex; flex-direction: column;
+  background: #FFFFFF; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.m-shelf-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(18, 32, 25, .12); }
+.m-shelf-card[hidden] { display: none; }
+.m-shelf-photo { height: 150px; background: #FFFFFF; }
+.m-shelf-photo img { display: block; width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+/* no photo: a plain slot, so the shelf keeps one height */
+.m-shelf-photo.is-empty { background: var(--paper-2); }
+.m-shelf-body { padding: 10px 12px 12px; }
+.m-shelf-body .m-price { display: block; font-size: 1rem; }
+.m-shelf-name { margin: 2px 0 0; font-weight: 700; font-size: 1rem; line-height: 1.35; color: var(--ink); }
+/* a cocktail's ingredients, kept to three lines so the shelf stays even */
+.m-shelf-desc {
+  margin: 4px 0 0; font-size: .82rem; line-height: 1.4; color: var(--ink-2);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+@media (prefers-reduced-motion: reduce) { .m-shelf-card { transition: none; } }
+
+/* a real photo can be tapped open (menu.js) — the corner mark says so */
+.m-photo.has-photo { cursor: zoom-in; }
+.m-photo.has-photo img { transition: transform .5s ease; }
+.m-photo.has-photo::after {
+  content: '';
+  position: absolute; inset-inline-end: 8px; inset-block-end: 8px; z-index: 2;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255, 255, 255, .92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231D2A1B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7'/%3E%3C/svg%3E") center / 14px no-repeat;
+  box-shadow: 0 2px 8px rgba(18, 32, 25, .18);
+  pointer-events: none;
+}
+.m-photo.has-photo:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+@media (hover: hover) { .m-photo.has-photo:hover img { transform: scale(1.04); } }
+
+/* ── a photo, full screen ────────────────────────────────── */
+html.m-viewer-on { overflow: hidden; }
+.m-viewer {
+  width: 100%; height: 100%; max-width: none; max-height: none; margin: 0;
+  padding: clamp(16px, 4vw, 48px); border: 0;
+  background: rgba(18, 32, 25, .94); color: var(--paper);
+}
+.m-viewer[open] { display: grid; place-items: center; }
+.m-viewer::backdrop { background: transparent; }
+.m-viewer-fig {
+  margin: 0; display: flex; flex-direction: column; align-items: center; gap: 16px;
+  max-width: min(980px, 100%); animation: m-viewer-in .25s ease;
+}
+.m-viewer-img {
+  display: block; max-width: 100%;
+  max-height: calc(100vh - 180px); max-height: calc(100dvh - 180px);
+  object-fit: contain; border-radius: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, .4);
+}
+.m-viewer-cap {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
+  gap: 4px 16px; text-align: center;
+}
+.m-viewer-name { font-family: var(--f-display); font-size: 1.35rem; color: var(--paper); }
+.m-viewer-cap .m-price, .m-viewer-cap .m-step-price { color: var(--logo-yellow); }
+.m-viewer-cap .m-step-label { color: var(--paper); background: rgba(246, 241, 228, .14); }
+.m-viewer-close {
+  position: fixed; inset-block-start: 14px; inset-inline-end: 14px;
+  width: 46px; height: 46px; padding: 0;
+  border: 1px solid var(--line-dark); border-radius: 50%;
+  background: rgba(18, 32, 25, .45); color: var(--paper);
+  font-size: 1.7rem; line-height: 1; cursor: pointer;
+}
+.m-viewer-close:hover { background: rgba(246, 241, 228, .14); }
+.m-viewer-close:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+@keyframes m-viewer-in {
+  from { opacity: 0; transform: scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .m-viewer-fig { animation: none; }
+  .m-photo.has-photo img { transition: none; }
+}
+.m-body { padding: 14px 16px 16px; display: grid; grid-template-columns: 1fr auto; gap: 4px 14px; align-items: start; }
+.m-name { font-weight: 600; font-size: 1.06rem; line-height: 1.35; }
+.m-price { font-weight: 700; color: var(--bark); white-space: nowrap; font-size: 1.08rem; }
+.m-desc { grid-column: 1 / -1; color: var(--ink-2); font-size: .93rem; line-height: 1.5; }
+
+.m-list { list-style: none; padding: 0; margin: 0; columns: 2 360px; column-gap: 56px; }
+.m-list-after { margin-top: 14px; }
+.m-row { break-inside: avoid; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.m-row-text { display: flex; flex-direction: column; min-width: 0; }
+.m-row .m-name { font-weight: 500; }
+.m-row .m-desc { font-size: .9rem; }
+
+.m-ladder { display: inline-flex; gap: 12px; white-space: nowrap; }
+.m-step { display: inline-flex; align-items: baseline; gap: 6px; }
+.m-step-label { font-size: .78rem; font-weight: 600; color: var(--ink-2); background: var(--paper-2); border-radius: 6px; padding: 1px 7px; }
+.m-step-price { font-weight: 700; color: var(--bark); }
+
+.m-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.m-chip { display: inline-flex; align-items: baseline; gap: 8px; padding: .45em .95em; border: 1px dashed var(--leaf); border-radius: 999px; background: var(--card); font-size: .94rem; }
+.m-chip-price { color: var(--bark); font-weight: 600; }
+
+.m-soon, .m-empty { color: var(--ink-2); padding: 18px 0; }
+.m-empty { text-align: center; font-size: 1.1rem; padding: 56px 0; }
+
+.menu-foot { padding-block: 48px 72px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); margin-top: 48px; }
+.menu-foot p { color: var(--ink-2); }
+
+@media (max-width: 560px) {
+  .m-grid { grid-template-columns: 1fr; }
+  .m-card { flex-direction: row; }
+  /* in the row card the photo keeps its shape instead of stretching to the
+     card, which used to cut the sides off the plate */
+  .m-card .m-photo { flex: 0 0 42%; aspect-ratio: 16 / 9; min-height: 0; align-self: center; }
+  .m-card.no-photo { border-top: 1px solid var(--line); border-inline-start: 4px solid var(--leaf); }
+  .m-body { grid-template-columns: 1fr; align-content: start; }
+  .m-body .m-price, .m-body .m-ladder { order: 3; }
+}
+
