@@ -30,7 +30,9 @@
       if (!biz || !biz.active) throw new Error('business not available');
       const items = biz.menu_items || [];
       let updated = 0, hidden = 0;
-      spans.forEach(span => {
+      /* read the prices again now: the carousel writes its dishes twice
+         after load, and the second copy needs the same prices */
+      document.querySelectorAll('[data-cat][data-he]').forEach(span => {
         const it = items.find(i => i.category === span.dataset.cat && i.name_he === span.dataset.he);
         const card = span.closest('li');
         if (!it || it.visible === false || it.sold_out === true) {

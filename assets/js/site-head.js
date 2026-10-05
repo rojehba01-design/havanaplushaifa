@@ -1,5 +1,5 @@
 /* ============================================================
-   Havana Plus — the header, as on The Peninsula's pages
+   Havana Plus, the header
    The bar sits see-through over the dark hero and turns solid
    white once the page scrolls.
 
@@ -33,10 +33,10 @@
   const WAZE = 'https://waze.com/ul?q=%D7%A9%D7%93%D7%A8%D7%95%D7%AA%20%D7%91%D7%9F%20%D7%92%D7%95%D7%A8%D7%99%D7%95%D7%9F%2012%20%D7%97%D7%99%D7%A4%D7%94&navigate=yes';
 
   const W = {
-    he: { menu: 'התפריט', about: 'עלינו', kitchen: 'מהמטבח', social: 'עקבו אחרינו', visit: 'הגעה ושעות', map: 'מפה', call: 'התקשרו', wa: 'וואטסאפ', waze: 'ניווט בוויז', close: 'סגירה' },
-    ar: { menu: 'القائمة', about: 'من نحن', kitchen: 'من المطبخ', social: 'تابعونا', visit: 'الوصول والساعات', map: 'الخريطة', call: 'اتصلوا', wa: 'واتساب', waze: 'التنقل عبر Waze', close: 'إغلاق' },
-    en: { menu: 'Menu', about: 'About us', kitchen: 'From the kitchen', social: 'Follow us', visit: 'Find us & hours', map: 'Map', call: 'Call', wa: 'WhatsApp', waze: 'Navigate with Waze', close: 'Close' },
-    ru: { menu: 'Меню', about: 'О нас', kitchen: 'С кухни', social: 'Мы в соцсетях', visit: 'Адрес и часы', map: 'Карта', call: 'Позвонить', wa: 'WhatsApp', waze: 'Маршрут в Waze', close: 'Закрыть' }
+    he: { menu: 'התפריט', about: 'עלינו', kitchen: 'הטעמים של הוואנה', social: 'עקבו אחרינו', visit: 'הגעה ושעות', map: 'מפה', call: 'התקשרו', wa: 'וואטסאפ', waze: 'ניווט בוויז', close: 'סגירה' },
+    ar: { menu: 'القائمة', about: 'من نحن', kitchen: 'نكهات هاڤانا', social: 'تابعونا', visit: 'الوصول والساعات', map: 'الخريطة', call: 'اتصلوا', wa: 'واتساب', waze: 'التنقل عبر Waze', close: 'إغلاق' },
+    en: { menu: 'Menu', about: 'About us', kitchen: 'The flavours of Havana', social: 'Follow us', visit: 'Find us & hours', map: 'Map', call: 'Call', wa: 'WhatsApp', waze: 'Navigate with Waze', close: 'Close' },
+    ru: { menu: 'Меню', about: 'О нас', kitchen: 'Вкусы Havana', social: 'Мы в соцсетях', visit: 'Адрес и часы', map: 'Карта', call: 'Позвонить', wa: 'WhatsApp', waze: 'Маршрут в Waze', close: 'Закрыть' }
   }[lang] || {};
 
   const links = [

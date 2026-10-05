@@ -62,34 +62,68 @@
     if (start) track.scrollLeft += centre(start) - centre(track);
     pick();
 
-    /* ── the row moves on its own ─────────────────────────────
-       A step every few seconds, walking back and forth rather than
-       jumping home at the end. It waits while the section is out of
-       sight, while the page is in another tab and while a guest is
-       hovering or tabbing through it, and it gives up for good the
-       moment someone drives the row themselves. A reader who asked
-       for less motion never sees it move. */
-    const DELAY = 3000;
-    let timer = 0, dir = 1, held = 0, taken = false;
+    /* ── the row rolls on its own ──────────────────────────────
+       A slow, steady roll the opposite way to the Instagram strip
+       below it (that strip runs left, so the dishes run right; owner,
+       2026-10-05). The dishes are written twice, so when the roll
+       reaches the end of one copy it jumps back by exactly one copy
+       and the picture never changes. Snapping is off while it rolls.
+       It waits while the section is out of sight, while the page is in
+       another tab and while a guest hovers or tabs through it; when
+       someone drives the row themselves it stops, and picks up again
+       after a few quiet seconds. A reader who asked for less motion
+       never sees it move. */
+    const originals = Array.from(track.children);
+    const twins = originals.map(li => {
+      const c = li.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      c.querySelectorAll('a, button').forEach(el => el.setAttribute('tabindex', '-1'));
+      c.querySelectorAll('img').forEach(img => img.setAttribute('alt', ''));
+      track.appendChild(c);
+      return c;
+    });
+    /* a dish Tafriti hides takes its twin with it */
+    originals.forEach((li, i) => new MutationObserver(() => { twins[i].hidden = li.hidden; })
+      .observe(li, { attributes: true, attributeFilter: ['hidden'] }));
 
-    const tick = () => {
-      const list = slides();
-      /* read the middle dish here and now: pick() runs in an animation
-         frame, which a background tab never gives us */
-      const mid = centre(track);
-      let here = active, gap = Infinity;
-      list.forEach(s => { const d = Math.abs(centre(s) - mid); if (d < gap) { gap = d; here = s; } });
-      const i = list.indexOf(here);
-      if (i < 0 || list.length < 2) return;
-      if (i >= list.length - 1) dir = -1;
-      if (i <= 0) dir = 1;
-      show(list[i + dir]);
+    const SPEED = 38;          // px per second
+    const QUIET = 5000;        // ms after the last touch before it rolls again
+    let raf = 0, last = 0, pos = 0, held = 0, taken = false, resume = 0;
+
+    const max = () => track.scrollWidth - track.clientWidth;
+    /* distance from the far left, the same in both directions */
+    const getX = () => (rtl ? track.scrollLeft + max() : track.scrollLeft);
+    const setX = x => { track.scrollLeft = rtl ? x - max() : x; };
+    const copyWidth = () => {
+      const i = originals.findIndex(li => !li.hidden);
+      return i < 0 ? 0 : Math.abs(twins[i].offsetLeft - originals[i].offsetLeft);
     };
-    const stop = () => { clearInterval(timer); timer = 0; };
-    const play = () => { if (taken || still.matches || held || timer) return; timer = setInterval(tick, DELAY); };
+
+    const frameStep = now => {
+      const dt = last ? Math.min(64, now - last) : 16;
+      last = now;
+      const w = copyWidth();
+      if (w > 0) {
+        pos -= SPEED * dt / 1000;            // the view slides left, so the dishes run right
+        if (pos < 1) pos += w;
+        setX(pos);
+      }
+      raf = requestAnimationFrame(frameStep);
+    };
+    const stop = () => { cancelAnimationFrame(raf); raf = 0; last = 0; track.style.scrollSnapType = ''; };
+    const play = () => {
+      if (taken || still.matches || held || raf) return;
+      track.style.scrollSnapType = 'none';
+      pos = getX();
+      raf = requestAnimationFrame(frameStep);
+    };
     const hold = () => { held += 1; stop(); };
     const release = () => { held = Math.max(0, held - 1); play(); };
-    const take = () => { taken = true; stop(); };
+    const take = () => {
+      taken = true; stop();
+      clearTimeout(resume);
+      resume = setTimeout(() => { taken = false; play(); }, QUIET);
+    };
 
     root.addEventListener('mouseenter', hold);
     root.addEventListener('mouseleave', release);
@@ -97,6 +131,7 @@
     root.addEventListener('focusout', release);
     track.addEventListener('pointerdown', take, { passive: true });
     track.addEventListener('touchstart', take, { passive: true });
+    track.addEventListener('wheel', take, { passive: true });
     track.addEventListener('click', e => { if (e.target.closest('.sig-slide')) take(); });
     if (prev) prev.addEventListener('click', take);
     if (next) next.addEventListener('click', take);
@@ -106,15 +141,16 @@
     /* a page opened in a background tab waits for its turn */
     if (document.hidden) hold();
     if ('IntersectionObserver' in window) {
-      let seen = true; /* playing until the observer says the row is away */
+      let seen = true; /* rolling until the observer says the row is away */
       new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting === seen) return;
           seen = e.isIntersecting;
           seen ? release() : hold();
         });
-      }, { threshold: 0.35 }).observe(root);
+      }, { threshold: 0.2 }).observe(root);
     }
+    pick();
     play();
   });
 })();
