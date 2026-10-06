@@ -632,6 +632,8 @@ html[lang="en"] .pick-name, html[lang="ru"] .pick-name { letter-spacing: .05em; 
 .social-btn:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 @media (max-width: 700px) { .social-track li { margin-right: 12px; } .social-track img { height: 62vw; } }
 @media (prefers-reduced-motion: reduce) { .social-track { animation: none; } .social-marquee { overflow-x: auto; } }
+/* the photo rows stand still while off screen (hero-video.js sets .is-off), so scrolling stays smooth on phones */
+.dish-track.is-off, .social-track.is-off { animation-play-state: paused; }
 /* visit */
 .visit-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; align-items: stretch; }
 .visit-card { background: var(--card); border: 1px solid var(--line); border-radius: 28px; padding: 36px; }
