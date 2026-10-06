@@ -830,16 +830,21 @@ html[lang="ar"] .map-label { letter-spacing: 0; font-size: 20px; }
      so the page ends dark green and the sign's post stands in it to the bottom */
   body:has(.site-foot) { padding-bottom: 0; }
   body:has(.dock) .site-foot { padding-bottom: calc(40px + 86px); }
+  /* one wide gold menu button + two round buttons (call, Waze); option 3 of tools/dock-options.html, 2026-10-06 */
   .dock {
     position: fixed; z-index: 50; bottom: 12px; inset-inline: 12px;
-    display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 6px; padding: 6px;
-    background: var(--night); border-radius: 999px; box-shadow: 0 14px 34px rgba(0, 0, 0, .35);
+    display: flex; gap: 8px;
   }
   .dock a {
-    display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; border-radius: 999px;
-    color: var(--paper); text-decoration: none; font-weight: 600; font-size: .95rem;
+    display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border-radius: 999px;
+    border: 1px solid rgba(233, 217, 166, .55); box-shadow: 0 10px 24px rgba(0, 0, 0, .3); text-decoration: none;
+    /* dark glass (colour option 5 of tools/dock-color-options.html, 2026-10-06): the page shows through, blurred */
+    background: rgba(18, 32, 25, .55); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: #fff;
   }
-  .dock a:first-child { background: var(--sun); color: var(--night); }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .dock a { background: rgba(18, 32, 25, .88); } }
+  .dock a:first-child { flex: 1; color: #E9D9A6; font-weight: 600; font-size: 1rem; }
+  /* the round ones keep their words for screen readers, only the icon shows */
+  .dock a:not(:first-child) { flex: none; width: 52px; font-size: 0; }
   .dock svg { width: 20px; height: 20px; }
 }
 
