@@ -914,13 +914,13 @@ html[lang="ar"] .map-label { letter-spacing: 0; font-size: 20px; }
 .m-jump-link:hover { border-color: var(--gold); background: rgba(174, 147, 100, .08); }
 .m-jump-link.is-here { background: var(--night); border-color: var(--night); color: #E9D9A6; }
 
-.m-cat { padding-block: 52px 8px; scroll-margin-top: calc(var(--head-h) + 70px); }
+.m-cat { padding-block: 24px 4px; scroll-margin-top: calc(var(--head-h) + 70px); }
 /* category heading and dish cards in the style of the home page's menu
    card (owner's pick, option 1 of tools/menu-cards-options.html,
    2026-10-05): a centred heading with the number in gold, the gold
    diamond ornament and the count; cards in a thin gold frame, the dish
    name in the heading font, prices in gold */
-.m-cat-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; margin-bottom: 26px; }
+.m-cat-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; margin-bottom: 14px; }
 .m-cat-no { order: 1; font-family: var(--f-display); color: var(--gold); font-size: 1.05rem; letter-spacing: .14em; }
 .m-cat-name { order: 2; font-family: var(--f-display); font-weight: 400; font-size: clamp(2.1rem, 4.4vw, 2.9rem); line-height: 1.15; }
 .m-cat-head::after {
@@ -1116,3 +1116,139 @@ html.m-sheet-on { overflow: hidden; }
   .m-card.no-photo .m-body { padding: 12px 14px; }
 }
 
+
+/* ============================================================
+   the more elegant bottom of the page (owner approved, 2026-10-10;
+   preview was tools/elegant-options.html): gold-framed Instagram
+   cards, gold location buttons, sand map, night-green pole, footer
+   ============================================================ */
+
+/* 1. Instagram row: smaller, square, thin gold frame; the posts' own
+   green border is cropped off by zooming the photo a little */
+.social-track li { margin-right: 18px; }
+.social-track a {
+  border-radius: 2px; box-shadow: none;
+  border: 1px solid var(--gold-l); padding: 6px; background: var(--ground);
+}
+.social-track img {
+  height: clamp(190px, 18vw, 270px); width: clamp(190px, 18vw, 270px);
+  object-fit: cover; transform: scale(1.06); clip-path: inset(3%);
+}
+.social-track a:hover img { transform: scale(1.1); }
+.social-btn {
+  background: transparent; color: var(--gold); border: 1px solid var(--gold-l);
+  width: 50px; height: 50px;
+}
+.social-btn:hover { background: var(--gold); color: #FFFFFF; transform: none; }
+
+/* 2. location: more air above, gold labels, one family of buttons */
+#visit { padding-top: 40px !important; }
+.visit-card .eyebrow { color: var(--gold-d); }
+.visit-rows { border-top: 1px solid rgba(174, 147, 100, .45); }
+.visit-rows dt { color: var(--gold) !important; font-weight: 400 !important; letter-spacing: .04em; }
+.visit-rows div:nth-child(2) dd { font-weight: 400 !important; }
+.visit-actions .btn,
+.visit-actions a[href*="waze.com"],
+.visit-actions a[href*="wa.me"] {
+  background: transparent; border: 1px solid var(--gold-l); color: var(--gold-d); border-radius: 999px;
+}
+.visit-actions a[href*="waze.com"] { background: var(--gold); border-color: var(--gold-l); color: #FFFFFF; }
+.visit-actions .btn:hover,
+.visit-actions a[href*="wa.me"]:hover { background: var(--gold); border-color: var(--gold); color: #FFFFFF; }
+.visit-actions a[href*="waze.com"]:hover { background: var(--gold-h); border-color: var(--gold-h); }
+
+/* 3. map: fine solid sand streets instead of green dashes, gold pin */
+.map-street { stroke: #D8CBB0; stroke-width: 1; stroke-dasharray: none; }
+.map-street.is-main { stroke: #C4B08A; stroke-width: 1.8; }
+.map-label { fill: var(--gold-d); }
+.map-pin-ring { stroke: var(--gold-l); stroke-width: 1.5; }
+.visit-map-link:hover .map-open { color: var(--gold); }
+
+/* 4. the pole in the house colours: night-green post with fine gold
+   edges, gold ring round the turning logo */
+.sign-pole { filter: drop-shadow(0 18px 24px rgba(18, 32, 25, .22)); }
+.sign-disc {
+  border: calc(var(--disc) * .025) solid var(--gold-l);
+  background: radial-gradient(circle at 34% 28%, #FFFFFF 0%, #FBF8F1 60%, #EFE7D6 100%);
+}
+.sign-post {
+  border-inline: 1px solid var(--gold-l);
+  background: linear-gradient(90deg, #0C1711 0%, var(--night-2) 40%, #2A4434 50%, var(--night-2) 60%, #0C1711 100%);
+}
+.sign-post span { color: #E9D9A6; font-family: var(--f-display); font-weight: 400; letter-spacing: .12em; text-shadow: none; }
+.sign-post::before, .sign-base { background: linear-gradient(90deg, #6E5A3C 0%, #D6C29A 50%, #6E5A3C 100%); }
+
+/* 5. footer: a fine gold line on top, links in the heading font */
+.site-foot.has-pole { border-top: 1px solid var(--gold-l); padding-block: 64px 48px; }
+.has-pole .foot-nav a { font-family: var(--f-display); font-size: 1.15rem; letter-spacing: .03em; color: #E9D9A6; }
+.has-pole .foot-nav a:hover { color: #FFFFFF; }
+.has-pole .foot-fine { color: rgba(233, 217, 166, .7); }
+
+/* ============================================================
+   points 5 to 9 of the elegance list (owner approved 2026-10-10;
+   preview was tools/elegant-options-2.html)
+   ============================================================ */
+
+/* 6. hero: a soft dark band behind the hours / address / phone line */
+.hero-media::before {
+  content: ''; position: absolute; inset: auto 0 0 0; height: 55%; z-index: 1; pointer-events: none;
+  background: linear-gradient(to top, rgba(10, 18, 14, .75) 0%, rgba(10, 18, 14, .45) 45%, rgba(10, 18, 14, 0) 100%);
+}
+.hero .hero-info dt, .hero .hero-info dd { text-shadow: 0 1px 10px rgba(0, 0, 0, .55); }
+.hero .hero-info dt { color: #E9D9A6 !important; letter-spacing: .04em; font-weight: 500; }
+
+
+/* 8. footer: centred, logo on top, one fine gold line, links in the
+   heading font, the small print last */
+.site-foot.has-pole { padding-block: 72px 44px; }
+.site-foot.has-pole .foot-inner {
+  grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 22px;
+  padding-inline-end: 0 !important;
+}
+.site-foot.has-pole .foot-logo { width: 84px; height: 84px; }
+.site-foot.has-pole .foot-nav { justify-content: center; gap: 10px 34px; padding-top: 22px; border-top: 1px solid rgba(174, 147, 100, .55); min-width: min(520px, 100%); }
+.site-foot.has-pole .foot-fine { font-size: .85rem; }
+
+/* 9. more air between sections (several start with padding-top:0) */
+#picks { padding-block: 96px 40px !important; }
+#kitchen { padding-top: 72px !important; }
+#social { padding-top: 96px !important; }
+#visit { padding-top: 120px !important; }
+@media (max-width: 700px) {
+  #picks { padding-block: 64px 24px !important; }
+  #kitchen { padding-top: 48px !important; }
+  #social { padding-top: 64px !important; }
+  #visit { padding-top: 80px !important; }
+}
+
+/* ============================================================
+   "מה שכדאי לטעום אצלנו" on the digital menu (2026-10-10): drawn by
+   menu.js like the drinks shelf, from the dishes picked in Tafriti
+   while the switch there is on
+   ============================================================ */
+.m-picks { padding-block: 28px 4px; }
+/* the home page card, when Tafriti sends dishes: a dish with no cut-out
+   plate shows its photo, framed; more than 4 dishes wrap to a new row */
+#picks .pick.is-photo img { object-fit: cover; border-radius: 4px; filter: none; }
+#picks .pick:nth-child(4n + 1) { border-inline-start: 0; }
+@media (max-width: 700px) {
+  #picks .pick:nth-child(4n + 1) { border-inline-start: 1px solid rgba(174, 147, 100, .4); }
+  #picks .pick:nth-child(odd) { border-inline-start: 0; }
+}
+/* a short last row sits in the middle, not under the first dishes */
+#picks .picks-grid { display: flex; flex-wrap: wrap; justify-content: center; row-gap: 26px; }
+#picks .pick { flex: 0 0 25%; box-sizing: border-box; }
+@media (max-width: 700px) { #picks .pick { flex-basis: 50%; } }
+/* the picks on the menu are dish cards marked special by two small solid
+   gold corners, the top one at the start and the bottom one at the end
+   (owner's pick: option 5 of tools/menu-picks-options.html, without the
+   star, both corners the size of the bottom one, 2026-10-10) */
+.m-picks-head { margin-bottom: 18px; }
+.m-pick { position: relative; border-color: var(--gold-l); }
+.m-pick::before, .m-pick::after {
+  content: ''; position: absolute; z-index: 2; width: 34px; height: 34px; pointer-events: none;
+}
+.m-pick::before { top: 0; inset-inline-start: 0; background: linear-gradient(135deg, #C9A86A 50%, transparent 50%); }
+.m-pick::after { bottom: 0; inset-inline-end: 0; background: linear-gradient(315deg, #C9A86A 50%, transparent 50%); }
+html[dir="rtl"] .m-pick::before { background: linear-gradient(225deg, #C9A86A 50%, transparent 50%); }
+html[dir="rtl"] .m-pick::after { background: linear-gradient(45deg, #C9A86A 50%, transparent 50%); }

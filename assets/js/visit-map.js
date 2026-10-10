@@ -13,8 +13,8 @@
   if (!svg) return;
 
   const PIN = { x: 280, y: 330 };
-  const DATA = { x0: -196, y0: -132, x1: 840, y1: 889 };   // where streets are drawn
-  const WANT = { w: 420, h: 260 };                          // at least this much each side of the pin
+  const DATA = { x0: -870, y0: -720, x1: 1430, y1: 1380 };     // where streets are drawn
+  const WANT = { w: 700, h: 420 };                             // at least this much each side of the pin
   const pin = svg.querySelector('.map-pin');
   const labels = svg.querySelectorAll('.map-label');
   const clamp = (v, lo, hi) => (lo > hi ? (lo + hi) / 2 : Math.min(Math.max(v, lo), hi));
