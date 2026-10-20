@@ -14,3 +14,11 @@ window.TAFRITI = {
   key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpcWVpY2hwZmRwZ2l3b2NqZHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNjQ0MDAsImV4cCI6MjEwNDY0MDQwMH0.o09uj0FStRd2lgpOMP7gMS1fwCQoyqFif0CMQFARiBk',
   slug: 'havana-plus'
 };
+
+/* Scheduled promotions (tafriti-ads.js): the same connection. The popup
+   takes its language from <html lang>, so each menu page shows its own. */
+window.TAFRITI_ADS = {
+  url: window.TAFRITI.url,
+  key: window.TAFRITI.key,
+  slug: window.TAFRITI.slug
+};

@@ -1252,3 +1252,56 @@ html.m-sheet-on { overflow: hidden; }
 .m-pick::after { bottom: 0; inset-inline-end: 0; background: linear-gradient(315deg, #C9A86A 50%, transparent 50%); }
 html[dir="rtl"] .m-pick::before { background: linear-gradient(225deg, #C9A86A 50%, transparent 50%); }
 html[dir="rtl"] .m-pick::after { background: linear-gradient(45deg, #C9A86A 50%, transparent 50%); }
+
+/* ============================================================
+   "מה שכדאי לטעום אצלנו" on the digital menu, restyled like the
+   "הכי מוזמנים" shelf of flaban.com (owner, 2026-10-11): heading and a
+   short line at the start, then small cards scrolled sideways
+   ============================================================ */
+.m-picks { padding-block: 22px 0; }
+.m-best-title { font-family: var(--f-display); font-weight: 400; font-size: 1.45rem; color: var(--ink); margin: 0 0 2px; }
+.m-best-line { margin: 0 0 14px; color: var(--ink-2); font-size: .95rem; }
+.m-best-strip {
+  list-style: none; margin: 0; padding: 0 0 14px;
+  display: flex; gap: 11px; overflow-x: auto; scrollbar-width: none;
+  scroll-snap-type: x proximity; overscroll-behavior-x: contain;
+}
+.m-best-strip::-webkit-scrollbar { display: none; }
+.m-best-card {
+  flex: 0 0 150px; scroll-snap-align: start;
+  border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+  background: var(--card); cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.m-best-card:hover { transform: translateY(-3px); box-shadow: 0 16px 30px rgba(18, 32, 25, .12); }
+.m-best-photo { height: 106px; background: var(--paper); }
+.m-best-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.m-best-body { padding: 9px 11px 11px; }
+.m-best-name { font-family: var(--f-display); font-weight: 400; font-size: 1.02rem; line-height: 1.3; color: var(--ink); margin: 0; }
+.m-best-body .m-price { display: block; margin-top: 3px; font-size: .92rem; }
+.m-best-body .m-ladder { display: flex; flex-wrap: wrap; gap: 2px 8px; margin-top: 3px; font-size: .92rem; }
+.m-best-card.m-tap:active { transform: scale(.985); }
+@media (prefers-reduced-motion: reduce) { .m-best-card { transition: none; } }
+
+/* the picks are centred and laid out by how many there are (owner, 2026-10-11):
+   up to 4 sit in one centred row, 2 a row on phones (an odd last one in the
+   middle); more than 4 scroll sideways, centred while they all fit */
+.m-best-title, .m-best-line { text-align: center; }
+.m-best-strip.is-fit { flex-wrap: wrap; justify-content: center; overflow: visible; row-gap: 12px; }
+.m-best-strip.is-fit .m-best-card { flex: 0 1 190px; }
+.m-best-strip.is-scroll > .m-best-card:first-child { margin-inline-start: auto; }
+.m-best-strip.is-scroll > .m-best-card:last-child { margin-inline-end: auto; }
+@media (max-width: 700px) {
+  .m-best-strip.is-fit .m-best-card { flex: 0 1 calc(50% - 6px); max-width: 200px; }
+  .m-best-strip.is-fit .m-best-photo { height: 120px; }
+}
+
+/* (owner, 2026-10-21) the same small cards, but every picked dish side by
+   side in ONE row that shares the width, never a second line. Past what
+   fits (about 3 a row on a phone) the row slides sideways. */
+.m-best-strip.is-row { justify-content: safe center; }
+.m-best-strip.is-row .m-best-card { flex: 1 1 0; min-width: 104px; max-width: 190px; }
+@media (max-width: 700px) {
+  .m-best-strip.is-row { gap: 8px; }
+  .m-best-strip.is-row .m-best-body { padding: 8px 8px 10px; }
+}
