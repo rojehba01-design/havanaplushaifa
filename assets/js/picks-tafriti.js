@@ -69,13 +69,13 @@
       picks.forEach(it => {
         const li = document.createElement('li');
         li.className = 'pick';
-        /* a plate cut by hand first; then the one Tafriti made on its own
-           for this very photo (cutout_url, tools/pick-plates in Tafriti);
-           then the site's own cut/; then the photo, framed */
+        /* the site's own plate first (cut here, the dish's plate or board
+           kept, owner 2026-10-21); then the one Tafriti made on its own for
+           this very photo (cutout_url, tools/pick-plates in Tafriti); then
+           the photo, framed */
         const hand = CUTOUT[it.name_he];
         const auto = it.cutout_url && it.cutout_of === it.photo_url ? it.cutout_url : '';
-        const src = hand && !hand.startsWith('cut/') ? `assets/img/${hand}.webp`
-          : auto || (hand ? `assets/img/${hand}.webp` : it.photo_url);
+        const src = hand ? `assets/img/${hand}.webp` : auto || it.photo_url;
         if (src) {
           const img = document.createElement('img');
           img.src = src; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
