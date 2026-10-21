@@ -3,9 +3,10 @@
 
    The owner picks the home page's dishes in Tafriti (menu screen,
    "מה שכדאי לטעום"). On load this reads that list once and redraws the
-   card's dishes in that order, in the page's language. A dish the site
-   has a cut-out plate for shows that plate; any other shows its Tafriti
-   photo, framed. A picked dish that is hidden or sold out is left out.
+   card's dishes in that order, in the page's language. A dish shows a
+   plate with no background: one cut by hand here, or the one Tafriti
+   makes on its own within the hour of the pick; until then its photo,
+   framed. A picked dish that is hidden or sold out is left out.
    With nothing picked, or Tafriti out of reach, the dishes written into
    the page stay as they are.
    ============================================================ */
@@ -51,7 +52,7 @@
   };
   const nameOf = it => it[`name_${LANG}`] || it.name_he || '';
   const headers = { apikey: TF.key, Authorization: `Bearer ${TF.key}` };
-  const select = 'active,site_picks,menu_items(id,name_he,name_ar,name_en,name_ru,photo_url,visible,sold_out)';
+  const select = 'active,site_picks,menu_items(id,name_he,name_ar,name_en,name_ru,photo_url,cutout_url,cutout_of,visible,sold_out)';
 
   fetch(`${TF.url}/rest/v1/businesses?slug=eq.${encodeURIComponent(TF.slug)}&select=${select}`, { headers })
     .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
@@ -68,13 +69,18 @@
       picks.forEach(it => {
         const li = document.createElement('li');
         li.className = 'pick';
-        const cut = CUTOUT[it.name_he];
-        const src = cut ? `assets/img/${cut}.webp` : it.photo_url;
+        /* a plate cut by hand first; then the one Tafriti made on its own
+           for this very photo (cutout_url, tools/pick-plates in Tafriti);
+           then the site's own cut/; then the photo, framed */
+        const hand = CUTOUT[it.name_he];
+        const auto = it.cutout_url && it.cutout_of === it.photo_url ? it.cutout_url : '';
+        const src = hand && !hand.startsWith('cut/') ? `assets/img/${hand}.webp`
+          : auto || (hand ? `assets/img/${hand}.webp` : it.photo_url);
         if (src) {
           const img = document.createElement('img');
           img.src = src; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
           img.width = 1200; img.height = 900;
-          if (!cut) li.classList.add('is-photo');
+          if (!hand && !auto) li.classList.add('is-photo');
           img.addEventListener('error', () => img.remove());
           li.appendChild(img);
         }
